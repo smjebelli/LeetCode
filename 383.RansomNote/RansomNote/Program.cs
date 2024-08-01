@@ -26,16 +26,16 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 
 Console.WriteLine("Hello, World!");
-//Console.WriteLine(CanConstruct("aab", "baa"));
-//Console.WriteLine(CanConstruct("bg", "efjbdfbdgfjhhaiigfhbaejahgfbbgbjagbddfgdiaigdadhcfcj"));
 
-Console.WriteLine(CanConstruct("az", "ab"));
 Console.WriteLine(CanConstruct("a", "b"));
 Console.WriteLine(CanConstruct("aa", "ab"));
 Console.WriteLine(CanConstruct("aa", "aab"));
 
+Console.WriteLine(CanConstruct("az", "ab"));
+Console.WriteLine(CanConstruct("bg", "efjbdfbdgfjhhaiigfhbaejahgfbbgbjagbddfgdiaigdadhcfcj"));
 
-static bool CanConstruct(string ransomNote, string magazine)
+//first solution
+static bool _CanConstruct(string ransomNote, string magazine)
 {
     var dicMag = StringToDictionary(magazine);
     var dicRan = StringToDictionary(ransomNote);
@@ -45,13 +45,27 @@ static bool CanConstruct(string ransomNote, string magazine)
     foreach (var key in dicRan.Keys)
     {
         if (dicMag.ContainsKey(key))
-           can = first ? (dicMag[key] >= dicRan[key]) : can & (dicMag[key] >= dicRan[key]);
+            can = first ? (dicMag[key] >= dicRan[key]) : can & (dicMag[key] >= dicRan[key]);
         else
             return can = false;
 
         first = false;
     }
     return can;
+}
+
+//Second solution
+static bool CanConstruct(string ransomNote, string magazine)
+{
+    var dicMag = StringToDictionary(magazine);
+    foreach (char c in ransomNote)
+    {
+        if (dicMag.ContainsKey(c) && dicMag[c] > 0)
+            dicMag[c]--;
+        else
+            return false;
+    }
+    return true;
 }
 
 static Dictionary<char, int> StringToDictionary(string magazine)
