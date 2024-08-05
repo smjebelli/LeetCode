@@ -1,18 +1,24 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.ComponentModel.DataAnnotations;
+using System.Security.AccessControl;
+
 Console.WriteLine("Hello, World!");
-char[][] board = [['5','3','.','.','7','.','.','.','.']
-                     ,['6','.','.','1','9','5','.','.','.']
-                     ,['.','9','8','.','.','.','.','6','.']
-                     ,['8','.','.','.','6','.','.','.','3']
-                     ,['4','.','.','8','.','3','.','.','1']
-                     ,['7','.','.','.','2','.','.','.','6']
-                     ,['.','6','.','.','.','.','2','8','.']
-                     ,['.','.','.','4','1','9','.','.','5']
-                     ,['.','.','.','.','8','.','.','7','9']];
+char[][] board =         [['5' , '3' , '.' ,    '.' , '7' , '.',    '.' , '.' , '.']
+                         ,['6' , '.' , '.' ,    '1' , '9' , '5' ,   '.' , '.' , '.']
+                         ,['.' , '9' , '8' ,    '.' , '.' , '.' ,   '.' , '6' , '.']
+
+                         ,['8' , '.' , '.' ,    '.' , '6' , '.' ,   '.' , '.' , '3']
+                         ,['4' , '.' , '.' ,    '8' , '.' , '3' ,   '.' , '.' , '1']
+                         ,['7' , '.' , '.' ,    '.' , '2' , '.' ,   '.' , '.' , '6']
+
+                         ,['.' , '6' , '.' ,    '.' , '.' , '.' ,   '2' , '8' , '.']
+                         ,['.' , '.' , '.' ,    '4' , '1' , '9' ,   '.' , '.' , '5']
+                         ,['.' , '.' , '.' ,    '.' , '8' , '.' ,   '.' , '7' , '9']];
 
 Console.WriteLine(IsValidSudoku(board));
 
-static bool IsValidSudoku(char[][] board)
+// slow solution
+static bool _IsValidSudoku(char[][] board)
 {
     bool rowsValid = false;
     bool colsValid = false;
@@ -71,4 +77,34 @@ static bool IsValidSudoku(char[][] board)
         }
     }
     return true;
+}
+
+static bool IsValidSudoku(char[][] board)
+{
+    HashSet<string> set = new HashSet<string>();
+
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            char c = board[i][j];
+            if (c == '.')
+                continue;
+            if ( !set.Add($"{c}row{i}") || !set.Add($"{c}col{j}") || !set.Add($"{c}box{i/3},{j/3}"))
+            {
+                Console.WriteLine($"{i}, {j}");
+                return false;
+            }
+
+        }
+    }
+
+
+    return true;
+}
+
+static (int, int) boxIds(int i, int j)
+{
+
+    return (0, 0);
 }
