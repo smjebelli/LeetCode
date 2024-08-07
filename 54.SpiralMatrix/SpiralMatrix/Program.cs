@@ -52,13 +52,13 @@ using System.Runtime.CompilerServices;
 
 ///*
 Console.WriteLine("Hello, World!");
-//Console.WriteLine(SpiralOrder([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]));
+IList<int> list = SpiralOrder([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]);
+Console.WriteLine();
 Console.WriteLine(SpiralOrder([[1]]));
 
 
 static IList<int> SpiralOrder(int[][] matrix)
 {
-    IList<int> list = new List<int>();
     int i = 0; int j = 0;
     int lastRow = matrix.Length - 1;
     int lastCol = matrix[0].Length - 1;
@@ -69,6 +69,7 @@ static IList<int> SpiralOrder(int[][] matrix)
     int rotCount = 0;
 
     int totalCount = matrix.Length * matrix[0].Length;
+    int[] li = new int[totalCount];
 
     HashSet<string> visited = new HashSet<string>();
 
@@ -76,15 +77,15 @@ static IList<int> SpiralOrder(int[][] matrix)
     int yInc = ys[0];
 
     int val = 0;
-    //visited.Add("0,0");
-    //list.Add(val);
+    
 
     while (count < totalCount)
     {
         val = matrix[i][j];
         visited.Add($"{i},{j}");
-        list.Add(val);
-        
+        //list.Add(val);
+        li[count] = val;
+
         //next indices
         j = j + yInc;
         i = i + xInc;
@@ -109,5 +110,5 @@ static IList<int> SpiralOrder(int[][] matrix)
         count++;
     }
 
-    return list;
+    return li.ToList();
 }
