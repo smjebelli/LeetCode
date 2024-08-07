@@ -52,7 +52,8 @@ using System.Runtime.CompilerServices;
 
 ///*
 Console.WriteLine("Hello, World!");
-Console.WriteLine(SpiralOrder([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]));
+//Console.WriteLine(SpiralOrder([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]));
+Console.WriteLine(SpiralOrder([[1]]));
 
 
 static IList<int> SpiralOrder(int[][] matrix)
@@ -61,88 +62,52 @@ static IList<int> SpiralOrder(int[][] matrix)
     int i = 0; int j = 0;
     int lastRow = matrix.Length - 1;
     int lastCol = matrix[0].Length - 1;
-    int firstRow = 0;
-    int firstCol = 0;
+
     int count = 0;
     int[] ys = [1, 0, -1, 0];
     int[] xs = [0, 1, 0, -1];
     int rotCount = 0;
 
-    int totalCount = matrix.Length * matrix[1].Length;
-    bool borderArrived = false;
+    int totalCount = matrix.Length * matrix[0].Length;
+
     HashSet<string> visited = new HashSet<string>();
 
     int xInc = xs[0];
     int yInc = ys[0];
 
-    //int val = matrix[0][0];
+    int val = 0;
     //visited.Add("0,0");
     //list.Add(val);
 
     while (count < totalCount)
     {
-        int val = matrix[i][j];
+        val = matrix[i][j];
         visited.Add($"{i},{j}");
         list.Add(val);
-
+        
+        //next indices
         j = j + yInc;
         i = i + xInc;
 
-        bool t1 = (i == lastRow) && (j == 0 || j == lastCol);
-        bool t2 = (j == lastCol) && (i == 0 || i == lastRow);
-        bool t = !visited.Add($"{i},{j}");
-        
-        if (t1 || t2 || t)
+        //check if next is valid
+        if (!visited.Add($"{i},{j}")|| j > lastCol || i > lastRow || j < 0 || i < 0)
         {
+            //move back
+            j = j - yInc;
+            i = i - xInc;
+
+            //rotate
             rotCount++;
             
             xInc = xs[rotCount % 4];
             yInc = ys[rotCount % 4];
 
-            borderArrived = false;
-
+            j = j + yInc;
+            i = i + xInc;
         }
-
-
-
-
-        //if (IsBorderArrived(i,j,visited,matrix))
-        //{
-        //    if (rotCount % 4 == 0)
-        //        firstRow++;
-        //    else if (rotCount % 4 == 1)
-        //        lastCol--;
-        //    else if (rotCount % 4 == 2)
-        //        lastRow--;
-        //    else if (rotCount % 4 == 3)
-        //        firstCol++;
-
-        //    borderArrived = true;
-        //}
-
-
-
+      
         count++;
     }
 
     return list;
-}
-
-static bool IsBorderArrived(int i, int j, int rows, int cols, HashSet<string> visited)
-{
-    bool t1 = (i == rows - 1) && (j == 0 || j == cols - 1);
-    bool t2 = (j == cols - 1) && (i == 0 || i == rows - 1);
-    bool t = !visited.Add($"{i},{j}");
-    return t || t1 || t2;
-    
-
-    // return (!visited.Add($"{i},{j}")) || (i == matrix.Length) || (j == matrix[0].Length) ;
-}
-
-static bool IsBorderArrived_(int i, int j, int lastRow, int lastCol, int firstRow, int firstCol)
-{
-    return (i == firstRow && j == firstCol) ||
-                    (i == firstRow && j == lastCol) ||
-                    (j == lastCol && i == lastCol) ||
-                    (j == firstCol && i == lastRow);
 }
