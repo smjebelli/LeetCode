@@ -62,9 +62,9 @@ using System.ComponentModel;
 using System.Reflection;
 
 Console.WriteLine("Hello, World!");
-//int[] nums = [3, 2, 2, 3]; int val = 3; // [2,2,_,_], 2
-int[] nums = [0, 1, 2, 2, 3, 0, 4, 2]; int val = 2; // [2,2,_,_]
-//swap(nums, 3, 4);
+int[] nums = [3, 2, 2, 3]; int val = 3; // [2,2,_,_], 2
+//nums = [0, 1, 2, 2, 3, 0, 4]; val = 2; 
+
 Console.WriteLine(string.Join(", ", nums));
 var res = RemoveElement(nums, val);
 Console.WriteLine("k= " + res);
@@ -74,21 +74,32 @@ Console.WriteLine(string.Join(", ", nums));
 
 static int RemoveElement(int[] nums, int val)
 {
-    int lastIdx = nums.Length;
-    for (int i = 0; i < nums.Length; i++)
+    int lastIdx = nums.Length - 1;
+    int firstIdx = 0;
+    int k = 0;
+    while (firstIdx <= lastIdx)
     {
         int j = 0;
-        while (nums[i] == val && i + j < lastIdx)
+        if (nums[firstIdx + j] == val)
         {
-            swap(nums, j, lastIdx);
-            lastIdx--;
-            j++;
+            k++;
+            while (firstIdx + j + 1 < nums.Length)
+            {
+                swap(nums, firstIdx + j, firstIdx + j + 1);
+                j++;
 
+                if (firstIdx + j == lastIdx )
+                {
+                    lastIdx--;
+                    firstIdx--;
+                    break;
+                }
+            }
         }
-        
+        firstIdx++;
     }
 
-    return nums.Length - 1;
+    return nums.Length - k;
 }
 
 static void swap(int[] nums, int i, int j)
@@ -96,7 +107,6 @@ static void swap(int[] nums, int i, int j)
     int tmp = nums[i];
     nums[i] = nums[j];
     nums[j] = tmp;
-
 }
 
 
