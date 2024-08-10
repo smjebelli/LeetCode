@@ -63,23 +63,39 @@ using System.Reflection;
 
 Console.WriteLine("Hello, World!");
 int[] nums = [3, 2, 2, 3]; int val = 3; // [2,2,_,_], 2
-//nums = [0, 1, 2, 2, 3, 0, 4]; val = 2; 
+nums = [0, 1, 2, 2, 3, 0, 4]; val = 2; 
 
 Console.WriteLine(string.Join(", ", nums));
 var res = RemoveElement(nums, val);
 Console.WriteLine("k= " + res);
 Console.WriteLine(string.Join(", ", nums));
 
-
-
+//good solution from answers not mine
 static int RemoveElement(int[] nums, int val)
+{
+    int result = 0;
+    foreach (var item in nums)
+    {
+        if (item != val)
+        {
+            nums[result] = item;
+            result++;
+        }
+    }
+
+    return result;
+}
+
+
+static int MyRemoveElement(int[] nums, int val)
 {
     int lastIdx = nums.Length - 1;
     int firstIdx = 0;
     int k = 0;
+    int j = 0;
     while (firstIdx <= lastIdx)
     {
-        int j = 0;
+        j = 0;
         if (nums[firstIdx + j] == val)
         {
             k++;
@@ -101,6 +117,8 @@ static int RemoveElement(int[] nums, int val)
 
     return nums.Length - k;
 }
+
+
 
 static void swap(int[] nums, int i, int j)
 {
