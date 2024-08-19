@@ -61,9 +61,9 @@ static void Rotate(int[][] matrix)
     int tmpS = matrix[0][0];
     int tmpD;
 
-    while (count < (lastRow + 1) * (lastCol + 1))
+    while (count <= (lastRow + 1) * (lastCol + 1))
     {
-        Console.WriteLine("Count: " + count.ToString());
+        //Console.WriteLine("Count: " + count.ToString());
         Print2(matrix,i,j);
         
 
