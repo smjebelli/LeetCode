@@ -37,8 +37,9 @@ Console.WriteLine("Hello, World!");
 int[][] matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 int[][] desired = [[7, 4, 1], [8, 5, 2], [9, 6, 3]];
 
-matrix = [[5, 1, 9, 11], [2, 4, 8, 10], [13, 3, 6, 7], [15, 14, 12, 16]];
-desired = [[15, 13, 2, 5], [14, 3, 4, 1], [12, 6, 8, 9], [16, 7, 10, 11]];
+//matrix = [[5, 1, 9, 11], [2, 4, 8, 10], [13, 3, 6, 7], [15, 14, 12, 16]];
+//desired = [[15, 13, 2, 5], [14, 3, 4, 1], [12, 6, 8, 9], [16, 7, 10, 11]];
+//matrix = [[1]];
 
 Console.WriteLine("Raw---------------------------");
 Print(matrix);
@@ -54,58 +55,74 @@ static void Rotate(int[][] matrix)
 {
     int lastRow = matrix.Length - 1;
     int lastCol = matrix[0].Length - 1;
+
+    if (lastRow == 0 && lastCol == 0)
+        return;
+
     HashSet<string> keys = new HashSet<string>();
+    HashSet<string> ks = new HashSet<string>();
     int i = 0; int j = 0;
-    int count = 0;
+    int count = 1;
     keys.Add($"{i},{j}");
     int tmpS = matrix[0][0];
-    int tmpD;
+    int tmpD = 0;
 
-    while (count <= (lastRow + 1) * (lastCol + 1))
+    int newR;
+    int newC;
+    for (int r = 0; r <= lastRow; r++)
     {
-        //Console.WriteLine("Count: " + count.ToString());
-        Print2(matrix,i,j);
-        
+        for (int c = 0; c <= lastCol; c++)
+        {
+            ks.Add($"{r},{c}");
+        }
+    }
 
-        (int newR, int newC) = NewIdx(i, j, lastRow, lastCol);
 
-        Console.WriteLine($"{i + 1},{j + 1} -> {newR + 1},{newC + 1}");
+    while (ks.Any())
+    {
+        (newR, newC) = NewIdx(i, j, lastRow, lastCol);
 
+        //if (keys.Contains($"{newR},{newC}"))
+        if (!ks.Contains($"{newR},{newC}"))
+        {
+            matrix[newR][newC] = tmpD;
+          
+
+            //if (newR + 1 <= lastRow)
+            //    newR++;
+            //else if (newC + 1 < lastCol)
+            //    newC++;
+            newR = int.Parse(ks.First().Split(',')[0]);
+            newC = int.Parse(ks.First().Split(',')[1]);
+
+            tmpS = matrix[newR][newC];
+            i = newR;
+            j = newC;
+            //keys.Add($"{i},{j}");
+            ks.Remove($"{i},{j}");
+            //count++;
+            continue;
+        }
         tmpD = matrix[newR][newC];
         matrix[newR][newC] = tmpS;
+
+        //Print(matrix);
+
+        tmpS = tmpD;
+
+        //Console.WriteLine($"{i + 1},{j + 1} -> {newR + 1},{newC + 1}");
 
         i = newR;
         j = newC;
 
-        if (!keys.Add($"{i},{j}"))
-        {
-            if (i + 1 <= lastRow)
-                i++;
-            else if (j + 1 < lastCol)
-                j++;
+        //keys.Add($"{i},{j}");
+        ks.Remove($"{i},{j}");
 
-            tmpS = matrix[i][j];
-        }
-        else
-            tmpS = tmpD;
-
-        count++;
+        //count++;
     }
+    (newR, newC) = NewIdx(i, j, lastRow, lastCol);
+    matrix[newR][newC] = tmpS;
 
-
-    //--------------------------------------------------------------------------
-    //for (int i = 0; i <= lastRow; i++)
-    //{
-    //    for (int j = 0; j <= lastCol; j++)
-    //    {
-    //        (int newR, int newC) = NewIdx(i, j, lastRow, lastCol);
-
-    //        tmpD = matrix[newR][newC];
-    //        matrix[newR][newC] = tmpS;
-
-    //        tmpS = tmpD;
-    //    }
-    //}
 }
 
 static (int newR, int newC) NewIdx(int i, int j, int lastRow, int lastCod)
@@ -126,8 +143,9 @@ static void Print(int[][] matrix)
         }
         Console.WriteLine(line);
     }
+    Console.WriteLine();
 }
-static void Print2(int[][] matrix,int r , int c)
+static void Print2(int[][] matrix, int r, int c)
 {
     for (int i = 0; i < matrix.Length; i++)
     {
