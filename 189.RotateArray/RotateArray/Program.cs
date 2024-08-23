@@ -7,8 +7,10 @@
 
 Example 1:
 
-Input: nums = [1,2,3,4,5,6,7], k = 3
-Output: [5,6,7,1,2,3,4]
+Input: nums =   [1,2,3,4,5,6,7], k = 3
+Output:         [5,6,7,1,2,3,4]
+Input: nums =   [1,2,3,4,5,6,7], k = 2
+Output:         [6,7,1,2,3,4,5]
 Explanation:
 rotate 1 steps to the right: [7,1,2,3,4,5,6]
 rotate 2 steps to the right: [6,7,1,2,3,4,5]
@@ -26,35 +28,45 @@ rotate 2 steps to the right: [3,99,-1,-100]
  
  */
 
-Console.WriteLine("Hello, World!");
+
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+int[] nums = [1, 2, 3, 4, 5, 6]; int k = 2; 
+//nums = [-1, -100, 3, 99]; k = 2;  //[3,99,-1,-100]
+
+Rotate(nums, k);
+Console.WriteLine(string.Join(" ", nums));
 
 
-
-void Rotate(int[] nums, int k)
+static void Rotate(int[] nums, int k)
 {
-    int st = 0;
-    int en = nums.Length - 1 - k;
-    
-    int tmpS = nums[en];
-    nums[0] = tmpS;
-    int tmpD = nums[0];
+    int tmpS; int tmpD;
+    tmpS = nums[0];
+    int idx = 0;
+    int count = 0;
+    HashSet<int> visited = new HashSet<int>();
 
-   
-    tmpS = nums[1];
-    nums[1] = tmpD;
-
-
-    for (int i = 0; i < nums.Length; i++)
+    while (count < nums.Length)
     {
+        idx = (idx + k) % nums.Length;
+        if (visited.Contains(idx))
+        {
+            while (visited.Contains(idx))            
+                idx++;
+            
+            tmpS= nums[idx];
+            continue;
+        }
 
-        Console.WriteLine(string.Join(" ", nums));
+        tmpD = nums[idx];
+        nums[idx] = tmpS; 
+        tmpS= tmpD;
+
+        visited.Add(idx);
+        count++;
     }
-}
-
-void Swap(int[] nums, int i, int j)
-{
-    int tmp = nums[j];
-    nums[j] = nums[i];
-    nums[i] = tmp;
 }
 
