@@ -52,38 +52,75 @@ int CanCompleteCircuit(int[] gas, int[] cost) {
 
 using System.ComponentModel.Design;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 Console.WriteLine("Hello, World!");
 int[] gas = [1, 2, 3, 4, 5];
 int[] cost = [3, 4, 5, 1, 2];
+//gas = [2, 3, 4];
+//cost = [3, 4, 3];
+gas = [2];
+cost = [2];
+//gas = CreateArray(100000,1);
+//gas[gas.Length - 1] = 2;
+//cost = CreateArray(100000,1);
+//cost[cost.Length - 50000] = 2;
+DateTime st = DateTime.Now;
 var can = CanCompleteCircuit(gas, cost);
+var span = DateTime.Now - st;
+Console.WriteLine(span.TotalMilliseconds);
+Console.WriteLine(can);
 
 
 static int CanCompleteCircuit(int[] gas, int[] cost)
 {
-    int g, c;
-    int tank = 0;
     int idx = 0;
     int count = 1;
+    if (gas.Length == 1 && gas[0] == cost[0])
+        return 0;
+    
     while (count <= gas.Length)
     {
-        tank = 0;
-        for (int i = idx; i <= gas.Length + idx; i++)
+
+        int tank = 0;
+        int c, g;
+        if (cost[idx % gas.Length] == gas[idx % gas.Length])
         {
-            g = gas[i % gas.Length];
+            idx++;
+            count++;
+            continue;
+        }
+
+        for (int i = idx; i < gas.Length + idx; i++)
+        {
+            if ((c = cost[i % gas.Length]) == 0 & (g = gas[i % gas.Length]) == 0)
+                continue;
             tank += g;
+            tank -= c;
             if (tank < 0)
                 break;
-            c = cost[i % gas.Length];
-            tank -= c;
         }
-        idx++;
-        count++;
+
+        if (tank >= 0)
+            return idx;
+        else
+        {
+            idx++;
+            count++;
+            continue;
+        }
 
     }
-    if (tank == 0)
-        return idx;
-    else
-        return -1;
+    return -1;
 
+}
+
+static int[] CreateArray(int count, int val)
+{
+    int[] gas = new int[count];
+    for (int i = 0; i < gas.Length; i++)
+    {
+        gas[i] = val;
+    }
+    return gas;
 }
