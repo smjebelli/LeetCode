@@ -10,7 +10,9 @@ Given two integer arrays gas and cost, return the starting gas station's index i
 
 Example 1:
 
-Input: gas = [1,2,3,4,5], cost = [3,4,5,1,2]
+Input: gas =    [1,  2,  3,  4,  5], 
+        cost =  [3,  4,  5,  1,  2]
+                [-2,-2, -2,  3,  3]
 Output: 3
 Explanation:
 Start at station 3 (index 3) and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
@@ -23,7 +25,8 @@ Therefore, return 3 as the starting index.
 
 Example 2:
 
-Input: gas = [2,3,4], cost = [3,4,3]
+Input: gas = [ 2,  3,  4], cost = [3,4,3]
+             [-1, -1, 1]
 Output: -1
 Explanation:
 You can't start at station 0 or 1, as there is not enough gas to travel to the next station.
@@ -59,12 +62,18 @@ int[] gas = [1, 2, 3, 4, 5];
 int[] cost = [3, 4, 5, 1, 2];
 //gas = [2, 3, 4];
 //cost = [3, 4, 3];
-gas = [2];
-cost = [2];
-//gas = CreateArray(100000,1);
-//gas[gas.Length - 1] = 2;
-//cost = CreateArray(100000,1);
+//gas =  [3, 1, 6, 4, 1, 3];
+//cost = [4, 0, 4, 6, 0, 4];
+//     [-1,1, 2,-2, 1,-1]
+//      [-1,0, 2, 0 ,1, 0]
+//      [-1,-1,1, 1, 2, 2]
+//      [-1,-2,-1,0, 2, 4]
+gas = CreateArray(100000, 0);
+gas[gas.Length - 1] = 1;
+cost = CreateArray(100000, 0);
 //cost[cost.Length - 50000] = 2;
+cost[cost.Length - 2] = 1;
+
 DateTime st = DateTime.Now;
 var can = CanCompleteCircuit(gas, cost);
 var span = DateTime.Now - st;
@@ -72,13 +81,40 @@ Console.WriteLine(span.TotalMilliseconds);
 Console.WriteLine(can);
 
 
+
 static int CanCompleteCircuit(int[] gas, int[] cost)
+{
+    int sum = 0;
+    for (int i = 0; i < gas.Length; i++)
+    {
+        sum += gas[i] - cost[i]; 
+    }
+    
+    if (sum < 0)
+        return -1;
+
+    int tank = 0;
+    int idx = 0;
+    for (int i = 0; i < gas.Length; i++)
+    {
+        tank += gas[i] - cost[i];
+        
+        if(tank<0)
+        {
+            idx=i+1;
+            tank = 0;
+        }
+    }
+    return idx;
+}
+
+static int CanCompleteCircuit_slow(int[] gas, int[] cost)
 {
     int idx = 0;
     int count = 1;
     if (gas.Length == 1 && gas[0] == cost[0])
         return 0;
-    
+
     while (count <= gas.Length)
     {
 
@@ -114,7 +150,6 @@ static int CanCompleteCircuit(int[] gas, int[] cost)
     return -1;
 
 }
-
 static int[] CreateArray(int count, int val)
 {
     int[] gas = new int[count];
