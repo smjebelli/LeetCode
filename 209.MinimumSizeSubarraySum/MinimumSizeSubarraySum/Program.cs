@@ -29,11 +29,80 @@ Constraints:
 Follow up: If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log(n)).
  */
 
+using System.Text.Json;
+
 int target = 7; int[] nums = [2, 3, 1, 2, 4, 3]; // output 2
+//nums = JsonSerializer.Deserialize<int[]>(File.ReadAllText(Path.Combine(new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.FullName, "TextFile1.txt"))); target = 396893380;
+
 Console.WriteLine(MinSubArrayLen(target, nums));
 
-
 static int MinSubArrayLen(int target, int[] nums)
+{
+    int left = 0;
+    int sum = nums.Skip(left).Take(nums.Length).Sum();
+    //left++;
+    int lastLeft = -1;
+    while (lastLeft != left)
+    {
+        sum = nums.Skip(left).Take(nums.Length - left).Sum();
+        if (sum >= target)
+        {
+            left = left + (nums.Length - left) / 2;
+        }
+        else
+        {
+            left = left + (nums.Length - left) / 2;
+        }
+        lastLeft = left;
+    }
+    return nums.Length - left + 1;
+}
+
+//for (i = left; i <= Math.Min(i + minLen, nums.Length - 1); i++)
+//{
+//    sum += nums[i];
+//    if (sum >= target)
+//    {
+//        len = i - left + 1;
+//        break;
+//    }
+//}
+//if (len < minLen)
+//{
+//    minLen = len;
+//}
+//left++;
+
+
+static int _MinSubArrayLen(int target, int[] nums)
+{
+    int left = 0;
+    int i = 0;
+    int len = 0;
+    int minLen = nums.Length;
+    while (left < nums.Length)
+    {
+        int sum = 0;
+
+        for (i = left; i <= Math.Min(i + minLen, nums.Length - 1); i++)
+        {
+            sum += nums[i];
+            if (sum >= target)
+            {
+                len = i - left + 1;
+                break;
+            }
+        }
+        if (len < minLen)
+        {
+            minLen = len;
+        }
+        left++;
+    }
+    return minLen;
+}
+
+static int MinSubArrayLen_slow(int target, int[] nums)
 {
     int minCount = int.MaxValue;
     int start = 0;
@@ -64,3 +133,4 @@ static int MinSubArrayLen(int target, int[] nums)
         }
     }
     return minCount == int.MaxValue ? 0 : minCount;
+}
