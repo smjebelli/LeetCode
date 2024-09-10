@@ -36,25 +36,73 @@ using System.Numerics;
 
 int[][] matrix = [[0, 1, 2, 0], [3, 4, 5, 2], [1, 3, 1, 5]];
 matrix = [[1, 2, 3, 4], [5, 0, 7, 8], [0, 10, 11, 12], [13, 14, 15, 0]];
+//expected : [[0,0,3,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 Print(matrix);
 SetZeroes(matrix);
 Console.WriteLine();
 Print(matrix);
 
+
 static void SetZeroes(int[][] matrix)
 {
-    HashSet<string> zeros = new HashSet<string>();
-    HashSet<string> processed = new HashSet<string>();
+    HashSet<int> rows = new HashSet<int>();
+    HashSet<int> cols = new HashSet<int>();
+
 
     for (int i = 0; i < matrix.Length; i++)
     {
         for (int j = 0; j < matrix[0].Length; j++)
         {
-            if (matrix[i][j] == 0 && (!processed.Contains($"{i},{j}") || zeros.Contains($"{i},{j}")))
+            Console.WriteLine($"i , j:\t{i} , {j}");
+            if (matrix[i][j] == 0)
             {
-                SetZeroByRowCol(i, j, matrix, zeros, processed);
+                rows.Add(i);
+                cols.Add(j);
 
-                //Print(matrix);
+                Print(matrix);
+            }
+        }
+    }
+
+    foreach (int i in rows)
+    {
+        for (int j = 0; j < matrix[0].Length; j++)
+        {
+            matrix[i][j] = 0;
+        }
+    }
+    foreach (int j in cols)
+    {
+        for (int i = 0; i < matrix.Length; i++)
+        {
+            matrix[i][j] = 0;
+        }
+    }
+
+}
+static void SetZeroes_(int[][] matrix)
+{
+    HashSet<string> zeros = new HashSet<string>();
+    HashSet<string> processed = new HashSet<string>();
+
+
+    for (int i = 0; i < matrix.Length; i++)
+    {
+        for (int j = 0; j < matrix[0].Length; j++)
+        {
+            Console.WriteLine($"i , j:\t{i} , {j}");
+            if (matrix[i][j] == 0 && !processed.Contains($"{i},{j}"))
+            {
+                Console.WriteLine($"settings rows & cols to zero for {i},{j}");
+                //SetZeroByRowCol(i, j, matrix, zeros, processed);
+
+
+
+                Print(matrix);
+            }
+            else
+            {
+                //processed.Add($"{i},{j}");
             }
 
         }
@@ -98,7 +146,7 @@ static void Print(int[][] matrix)
 {
     for (int i = 0; i < matrix.Length; i++)
     {
-        Console.WriteLine(string.Join(" ", matrix[i]));
+        Console.WriteLine(string.Join("\t", matrix[i]));
     }
     Console.WriteLine();
 }
